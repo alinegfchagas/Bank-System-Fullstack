@@ -1,0 +1,14 @@
+
+
+
+### Create User
+POST http://localhost:3003/users/teste
+Content-Type: application/json
+
+{ 
+   "username": "Teste3",
+   "password": ""     
+}
+
+### Get Orders
+GET http://localhost:3003/api/orders

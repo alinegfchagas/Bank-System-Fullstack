@@ -1,0 +1,13 @@
+import { User } from "../models/User";
+import { BaseDatabase } from "./BaseDatabase";
+
+export class AccountDatabase extends BaseDatabase{
+    public static TABLE_ACCOUNT = "Ng_Account"
+}
+// public createUser = async (user:User): Promise<void> =>{
+//     await BaseDatabase
+//     .connection(AccountDatabase.TABLE_ACCOUNT)
+//     .insert(
+       
+//     )
+// }
