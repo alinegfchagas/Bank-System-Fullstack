@@ -3,7 +3,18 @@ import { BaseDatabase } from "./BaseDatabase";
 
 export class UserDatabase extends BaseDatabase {
   public static TABLE_USERS = "Ng_Users";
-  public static TABLE_ACCOUNT = "Ng_Accounts"
+ 
+  public toUserDBModel = (user: User): IUserDB => {
+    const userDB: IUserDB = {
+        id: user.getId(),
+        userName: user.getUsername(),
+        password: user.getPassword(),
+        accountId: user.getAccountId()
+    }
+
+    return userDB
+}
+
 
   public findUserName = async (
     username: string
@@ -15,15 +26,6 @@ export class UserDatabase extends BaseDatabase {
     return result[0];
   };
 
-
-  createAccount = async (accountId:string) : Promise<void> => {
-    await BaseDatabase
-    .connection(UserDatabase.TABLE_ACCOUNT)
-    .insert({
-      id: accountId,
-      balance: "0"
-    });
-  };
 
   public createUser = async (user: User): Promise<void> => {
 

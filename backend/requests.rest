@@ -2,13 +2,35 @@
 
 
 ### Create User
-POST http://localhost:3003/users/teste
+POST http://localhost:3003/users/signup
 Content-Type: application/json
 
 { 
-   "username": "Teste3",
-   "password": ""     
+   "username": "BR123",
+   "password": "Bananinha123"     
 }
 
-### Get Orders
-GET http://localhost:3003/api/orders
+### Login User
+# @name login
+POST http://localhost:3003/users/login
+Content-Type: application/json
+                                                                                            
+{ 
+   "username": "BR123",
+   "password": "Bananinha123"     
+}
+
+
+
+
+
+###
+POST http://localhost:3003/exchange/exchange
+Authorization: {{login.response.body.token}}
+
+Content-Type: application/json
+
+{ 
+   "username": "Aline",
+   "value": 30     
+}

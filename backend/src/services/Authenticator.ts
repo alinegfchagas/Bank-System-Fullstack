@@ -5,7 +5,8 @@ import dotenv from "dotenv"
 dotenv.config()
 
 export interface ITokenPayload {
-    id: string
+    id: string,
+    userName:string
 }
 
 export class Authenticator {

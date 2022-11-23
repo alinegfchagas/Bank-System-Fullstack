@@ -1,14 +1,14 @@
 
 export interface IUserDB {
     id:string,
-    username: string,
+    userName: string,
     password: string,
     accountId:string
 }
 
 
 export interface IInputDTO{
-    username:string,
+    userName:string,
     password:string
 }
 
@@ -23,7 +23,7 @@ export interface IOutputDTO {
 export class User {
     constructor(
         private id: string,
-        private username: string,
+        private userName: string,
         private password: string,
         private accountId: string
     ) {}
@@ -36,11 +36,11 @@ export class User {
         this.id = newId
     }
     public getUsername = () => {
-        return this.username
+        return this.userName
     }
 
     public setUsername = (newUserName: string) => {
-        this.username = newUserName
+        this.userName = newUserName
     }
 
     public getPassword = () => {

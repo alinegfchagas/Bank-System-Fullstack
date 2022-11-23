@@ -20,7 +20,7 @@ DROP TABLE IF EXISTS Ng_Users;
         CREATE TABLE IF NOT EXISTS Ng_Transactions(
             id VARCHAR(255) PRIMARY KEY,
             value DECIMAL(15,2),
-            createdAt DATETIME,
+            createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             debitedAccountId VARCHAR(255),
             creditedAccountId VARCHAR(255),
             FOREIGN KEY (debitedAccountId ) REFERENCES Ng_Accounts (id),

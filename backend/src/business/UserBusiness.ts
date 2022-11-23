@@ -1,4 +1,5 @@
 import { UserDatabase } from "../database/UserDatabase";
+import { AccountDatabase } from "../database/AccountDatabase";
 import { IInputDTO, IOutputDTO, User } from "../models/User";
 import { Authenticator, ITokenPayload } from "../services/Authenticator";
 import { HashManager } from "../services/HashManager";
@@ -7,16 +8,17 @@ import { IdGenerator } from "../services/IdGenerator";
 export class UserBusiness {
   constructor(
     private userDataBase: UserDatabase,
+    private accountDataBase: AccountDatabase,
     private idGenerator: IdGenerator,
     private hashManager: HashManager,
     private authenticator: Authenticator
   ) {}
 
+  // Rules SignUp
+  public register = async (input: IInputDTO) => {
+    const { userName, password } = input;
 
-  public cadastro = async (input: IInputDTO) => {
-    const { username, password } = input;
-    // const validPassword = 
-    if (typeof username!== "string") {
+    if (typeof userName !== "string") {
       throw new Error("Parâmetro 'username' inválido");
     }
 
@@ -24,48 +26,120 @@ export class UserBusiness {
       throw new Error("Parâmetro 'password' inválido");
     }
 
-    if (username.length < 3) {
-      throw new Error(
-        "Parâmetro 'username' inválido: mínimo de 3 caracteres"
-      );
+    if (userName.length < 3) {
+      throw new Error("Parâmetro 'username' inválido: mínimo de 3 caracteres");
     }
 
     if (password.length < 8) {
-      throw new Error(
-        "Parâmetro 'password' inválido: mínimo de 8 caracteres"
-      );
+      throw new Error("Parâmetro 'password' inválido: mínimo de 8 caracteres");
     }
 
-    // if (!password.includes(/^[A-Za-z]$/g)) {
-    //   throw new Error("Parâmetro 'password' precisa conter letra maiúscula");
+    if (
+      !password.match(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?:([0-9a-zA-Z])(?!\1)){8,}$/
+      )
+    ) {
+      throw new Error(
+        "Parâmetro 'password' precisa conter ao menos uma letra maiúscula"
+      );
+    }
+    //  if (!password.match(/^(?=.*\d)(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?:([0-9a-zA-Z])(?!\1)){8,}$/i) ){
+    //   throw new Error("Parâmetro 'password' deve conter ao menos um número");
     // }
-    // const thisUserExists = await this.userDataBase.findUserName(username)
+
+    const thisUserExists = await this.userDataBase.findUserName(userName);
+
+    if (thisUserExists) {
+      throw new Error("Usuario já cadastrado!");
+    }
 
     const id = this.idGenerator.generate();
-    
-    const accountId = this.idGenerator.generate();
 
-    await this.userDataBase.createAccount(accountId)
-    const hashedPassword = await this.hashManager.hash(password)
+    const accountId = userName;
 
     
-    const user = new User(id, username, hashedPassword, accountId)
-    await this.userDataBase.createUser(user)
+    const hashedPassword = await this.hashManager.hash(password);
+    
+    await this.accountDataBase.createAccount(accountId);
+
+    const user = new User(id, userName, hashedPassword, accountId);
+
+    await this.userDataBase.createUser(user);
     const payload: ITokenPayload = {
-      id: user.getId()
+      id: user.getId(),
+      userName: user.getUsername(),
     };
 
     const token = this.authenticator.generateToken(payload);
 
-    const response:IOutputDTO = {
-      message: "Cadastro realizado com sucesso",
+    const response: IOutputDTO = {
+      message: "Cadastro realizado com sucesso conta criada",
       token,
     };
     return response;
   };
+  // Rules Login
+  public doLogin = async (input: IInputDTO) => {
+    const { userName, password } = input;
 
+    if (typeof userName !== "string") {
+      throw new Error("Parâmetro 'username' inválido");
+    }
 
+    if (typeof password !== "string") {
+      throw new Error("Parâmetro 'password' inválido");
+    }
 
+    if (userName.length < 3) {
+      throw new Error("Parâmetro 'username' inválido: mínimo de 3 caracteres");
+    }
 
+    if (password.length < 8) {
+      throw new Error("Parâmetro 'password' inválido: mínimo de 8 caracteres");
+    }
+    if (
+      !password.match(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?:([0-9a-zA-Z])(?!\1)){8,}$/
+      )
+    ) {
+      throw new Error(
+        "Parâmetro 'password' precisa conter ao menos uma letra maiúscula"
+      );
+    }
+    const userExists = await this.userDataBase.findUserName(userName);
 
+    if (!userExists) {
+      throw new Error("Usuario não cadastrado!");
+    }
+
+    const user = new User(
+      userExists.id,
+      userExists.userName,
+      userExists.password,
+      userExists.accountId
+    );
+
+    const passwordIsCorrect = await this.hashManager.compare(
+      password,
+      user.getPassword()
+    );
+
+    if (!passwordIsCorrect) {
+      throw new Error("Password Incorreto");
+    }
+
+    const payload: ITokenPayload = {
+      id: user.getId(),
+      userName: user.getUsername(),
+    };
+
+    const token = this.authenticator.generateToken(payload);
+
+    const answer: IOutputDTO = {
+      message: "success",
+      token,
+    };
+
+    return answer;
+  };
 }
