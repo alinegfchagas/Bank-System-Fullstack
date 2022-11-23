@@ -1,7 +1,7 @@
 
 export interface IUserDB {
     id:string,
-    userName: string,
+    username: string,
     password: string,
     accountId:string
 }
@@ -35,11 +35,11 @@ export class User {
     public setId = (newId: string) => {
         this.id = newId
     }
-    public getUsername = () => {
+    public getUserName = () => {
         return this.userName
     }
 
-    public setUsername = (newUserName: string) => {
+    public setUserName = (newUserName: string) => {
         this.userName = newUserName
     }
 

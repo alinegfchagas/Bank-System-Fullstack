@@ -7,7 +7,7 @@ export class UserDatabase extends BaseDatabase {
   public toUserDBModel = (user: User): IUserDB => {
     const userDB: IUserDB = {
         id: user.getId(),
-        userName: user.getUsername(),
+        username: user.getUserName(),
         password: user.getPassword(),
         accountId: user.getAccountId()
     }
@@ -33,7 +33,7 @@ export class UserDatabase extends BaseDatabase {
     .connection(UserDatabase.TABLE_USERS)
     .insert({
       id: user.getId(),
-      username: user.getUsername(),
+      username: user.getUserName(),
       password: user.getPassword(),
       accountId: user.getAccountId()
     });

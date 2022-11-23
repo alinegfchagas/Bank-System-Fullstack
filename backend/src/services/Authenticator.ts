@@ -6,7 +6,7 @@ dotenv.config()
 
 export interface ITokenPayload {
     id: string,
-    userName:string
+    username:string,
 }
 
 export class Authenticator {

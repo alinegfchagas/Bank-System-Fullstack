@@ -6,7 +6,7 @@ POST http://localhost:3003/users/signup
 Content-Type: application/json
 
 { 
-   "username": "BR123",
+   "username": "Kalena",
    "password": "Bananinha123"     
 }
 
@@ -16,21 +16,25 @@ POST http://localhost:3003/users/login
 Content-Type: application/json
                                                                                             
 { 
-   "username": "BR123",
+   "username": "joao",
    "password": "Bananinha123"     
 }
 
 
 
 
-
-###
-POST http://localhost:3003/exchange/exchange
+### Transaction 
+POST http://localhost:3003/transfer/exchange
 Authorization: {{login.response.body.token}}
-
 Content-Type: application/json
 
 { 
-   "username": "Aline",
-   "value": 30     
+   "userNameAccount": "Kalena",
+   "value": 10    
 }
+
+
+
+### Get Transaction 
+GET http://localhost:3003/transfer/allTransaction
+Authorization: {{login.response.body.token}}

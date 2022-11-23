@@ -21,4 +21,5 @@ const transactionController = new TransactionController(
   )
 
   transactionRouter.post("/exchange", transactionController.transferAccount);
-  // transactionRouter.post("/login", transactionController)
+  transactionRouter.get("/allTransaction", transactionController.viewCashOut)
+  // transactionRouter.get("/cashIn", transactionController)

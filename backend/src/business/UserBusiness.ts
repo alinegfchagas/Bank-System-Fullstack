@@ -67,7 +67,7 @@ export class UserBusiness {
     await this.userDataBase.createUser(user);
     const payload: ITokenPayload = {
       id: user.getId(),
-      userName: user.getUsername(),
+      username: user.getUserName()
     };
 
     const token = this.authenticator.generateToken(payload);
@@ -114,7 +114,7 @@ export class UserBusiness {
 
     const user = new User(
       userExists.id,
-      userExists.userName,
+      userExists.username,
       userExists.password,
       userExists.accountId
     );
@@ -130,7 +130,7 @@ export class UserBusiness {
 
     const payload: ITokenPayload = {
       id: user.getId(),
-      userName: user.getUsername(),
+      username: user.getUserName()
     };
 
     const token = this.authenticator.generateToken(payload);

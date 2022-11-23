@@ -4,8 +4,8 @@ import { UserDatabase } from "../database/UserDatabase";
 import { Authenticator } from "../services/Authenticator";
 import { IdGenerator } from "../services/IdGenerator";
 import { Account } from "../models/Account";
-import { Transaction } from "../models/Transaction";
-import { log } from "console";
+import { ITransactionInputDTO, IViewTransactionInputDTO, Transaction } from "../models/Transaction";
+
 
 export class TransactionBusiness {
   constructor(
@@ -16,54 +16,69 @@ export class TransactionBusiness {
     private authenticator: Authenticator
   ) {}
 
-  public transferAccount = async (input: any) => {
-    const { token, userNameCashIn, value } = input;
-console.log("----")
-console.log({token})
-console.log("----")
-    if (!token || !userNameCashIn || !value) {
+  public transferAccount = async (input: ITransactionInputDTO) => {
+    // Desestruturando 
+    const { token, userNameAccount, value } = input;
+    // Verificando se campos vieram vazios
+    if (!token || !userNameAccount || !value) {
       throw new Error("Parametros faltando");
     }
-    // Verificação se a conta existe CASH IN
-    const userDBCashIn = await this.accountDataBase.getAccount(userNameCashIn);
-    const creditedAccount = new Account(userDBCashIn.id, userDBCashIn.balance);
+    // Verificação se a conta existe 
+    const userDBCashIn = await this.accountDataBase.getAccount(userNameAccount);
     if (!userDBCashIn) {
       throw new Error("Credenciais inválidas");
     }
-
-    const userTokenData = this.authenticator.getTokenPayload(token);
-    const userNameId = userTokenData?.userName as string;
-    // Verificação se a conta existe CASH OUT
+    // Requisitando conta e armazenando dados
+    const creditedAccount = new Account(userDBCashIn.id, userDBCashIn.balance);
+    // Requisitando dados via JWT
+    const userTokenData = this.authenticator.getTokenPayload(token);     
+    const userNameId = userTokenData?.username as string;    
+    // Verificação se a conta existe 
     const userDBCashOut = await this.accountDataBase.getAccount(userNameId);
     const debitedAccount = new Account(userDBCashOut.id, userDBCashOut.balance);
 
-    if (userNameCashIn === userNameId) {
+    if (userNameAccount === userNameId) {
       throw new Error("Não é possível transferir para sua própria conta");
     }
-
+    // Vericando se o saldo é positivo
     if (debitedAccount.getBalance() < value) {
       throw new Error("Saldo insuficiente");
     }
-
+    // Calculo de retirada de CASH 
     const calculateCashOut = debitedAccount.getBalance() - value;
+    // Calculo de adição de CASH 
     const calculateCashIn = creditedAccount.getBalance() + value;
-
-    await this.accountDataBase.updateCashOut(calculateCashOut,debitedAccount.getId())
-    await this.accountDataBase.updateCashIn(calculateCashIn,creditedAccount.getId())
-
-
+    // Gerando ID
     const id = this.idGenerator.generate();
-
-    const transfer = new Transaction (id,value,debitedAccount.getId(),creditedAccount.getId()) 
-
-    await this.transactionDatabase.bankTransfer(transfer)
+    // Criando nova transação
+    const transferDB = new Transaction (id,value,debitedAccount.getId(),creditedAccount.getId()) 
+    // Requição de transferencia
+    await this.transactionDatabase.bankTransfer(transferDB)
+    // Requisição de alteração no DB debitedAccount
+    await this.accountDataBase.updateCashOut(calculateCashOut,debitedAccount.getId())
+    // Requisição de alteração creditedAccount
+    await this.accountDataBase.updateCashIn(calculateCashIn,creditedAccount.getId())
 
     const response:any= {
       message: "Transferencia realizada com sucesso!",
-      
     };
     return response;
-
-
   };
+   public transactionsById = async (input:IViewTransactionInputDTO) => {
+    // Desestruturando
+    const {token} = input
+
+    // Requisitando dados via JWT
+    const userTokenData = this.authenticator.getTokenPayload(token);     
+    const userNameId = userTokenData?.username as string;    
+    // Verificação se a conta existe 
+    const debitedAccount= userNameId
+    const  creditedAccount =userNameId 
+    const response = await this.transactionDatabase.getTransactionsById(debitedAccount,creditedAccount) 
+     
+    return response
+    
+   }
+
+
 }

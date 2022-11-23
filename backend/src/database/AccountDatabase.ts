@@ -19,18 +19,18 @@ export class AccountDatabase extends BaseDatabase {
     });
   };
 
-  public getAccount = async (userName: string)=> {
+  public getAccount = async (id: string)=> {
     const result = await BaseDatabase.connection(
       AccountDatabase.TABLE_ACCOUNT)
-      .where({ userName });
+      .where({id});
 
     return result[0];
   };
 
   public updateCashOut = async(calculateCashOut:number,id:string): Promise<void> =>{
-    await BaseDatabase.connection.raw(` UPDATE ${AccountDatabase.TABLE_ACCOUNT} SET balace = ${calculateCashOut} WHERE id = "${id}" `)
+    await BaseDatabase.connection.raw(` UPDATE ${AccountDatabase.TABLE_ACCOUNT} SET balance = ${calculateCashOut} WHERE id = "${id}" `)
   }
   public updateCashIn = async(calculateCashIn:number,id:string): Promise<void> =>{
-    await BaseDatabase.connection.raw(` UPDATE ${AccountDatabase.TABLE_ACCOUNT} SET balace = ${calculateCashIn} WHERE id = "${id}" `)
+    await BaseDatabase.connection.raw(` UPDATE ${AccountDatabase.TABLE_ACCOUNT} SET balance = ${calculateCashIn} WHERE id = "${id}" `)
   }
 }
