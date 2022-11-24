@@ -15,9 +15,7 @@ export class TransactionController {
       const response = await this.transactionBusiness.transferAccount(input);
       res.status(200).send(response);
     } catch (error: any) {
-      // if (error){ 
-      //     return res.status(error.statusCode).send({message:error.message})
-      // }
+    
       res.status(500).send(error.message || error.sqlMessage);
     }
   };
@@ -30,9 +28,7 @@ export class TransactionController {
       const response = await this.transactionBusiness.transactionsById(input);
       res.status(200).send(response);
     } catch (error: any) {
-      // if (error){ 
-      //     return res.status(error.statusCode).send({message:error.message})
-      // }
+     
       res.status(500).send(error.message || error.sqlMessage);
     }
   }

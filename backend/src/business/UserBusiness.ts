@@ -43,10 +43,7 @@ export class UserBusiness {
         "Parâmetro 'password' precisa conter ao menos uma letra maiúscula"
       );
     }
-    //  if (!password.match(/^(?=.*\d)(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?:([0-9a-zA-Z])(?!\1)){8,}$/i) ){
-    //   throw new Error("Parâmetro 'password' deve conter ao menos um número");
-    // }
-
+  
     const thisUserExists = await this.userDataBase.findUserName(userName);
 
     if (thisUserExists) {
