@@ -47,7 +47,7 @@ export class UserBusiness {
     const thisUserExists = await this.userDataBase.findUserName(userName);
 
     if (thisUserExists) {
-      throw new Error("Usuario já cadastrado!");
+      throw new Error("Usuário já cadastrado!");
     }
 
     const id = this.idGenerator.generate();
@@ -70,7 +70,7 @@ export class UserBusiness {
     const token = this.authenticator.generateToken(payload);
 
     const response: IOutputDTO = {
-      message: "Cadastro realizado com sucesso conta criada",
+      message: "Cadastro realizado com sucesso!",
       token,
     };
     return response;
@@ -106,7 +106,7 @@ export class UserBusiness {
     const userExists = await this.userDataBase.findUserName(userName);
 
     if (!userExists) {
-      throw new Error("Usuario não cadastrado!");
+      throw new Error("Usuário não cadastrado!");
     }
 
     const user = new User(
@@ -122,7 +122,7 @@ export class UserBusiness {
     );
 
     if (!passwordIsCorrect) {
-      throw new Error("Password Incorreto");
+      throw new Error("Password Incorreta");
     }
 
     const payload: ITokenPayload = {

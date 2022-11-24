@@ -20,7 +20,7 @@ export class TransactionBusiness {
     const { token, userNameAccount, value } = input;
     // Verificando se campos vieram vazios
     if (!token || !userNameAccount || !value) {
-      throw new Error("Parametros faltando");
+      throw new Error("Parâmetros faltando");
     }
     // Verificação se a conta existe 
     const userDBCashIn = await this.accountDataBase.getAccount(userNameAccount);
@@ -59,7 +59,7 @@ export class TransactionBusiness {
     await this.accountDataBase.updateCashIn(calculateCashIn,creditedAccount.getId())
 
     const response:any= {
-      message: "Transferencia realizada com sucesso!",
+      message: "Transferência realizada com sucesso!",
     };
     return response;
   };
