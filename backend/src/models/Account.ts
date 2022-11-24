@@ -3,6 +3,10 @@ export interface IAccountDB {
     balance:number
 }
 
+export interface IAccountInputDTO{ 
+    token:string
+}
+
 export class Account {
     constructor(
         private id: string,

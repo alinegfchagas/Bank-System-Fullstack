@@ -31,7 +31,7 @@ export class TransactionDatabase extends BaseDatabase {
                 exchange.value,
                 exchange.debitedAccountId,
                 exchange.creditedAccountId,
-                exchange.createAt
+                exchange.createdAt
             )
         })
 

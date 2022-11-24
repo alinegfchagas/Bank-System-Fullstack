@@ -3,6 +3,7 @@ export interface ITransactionDB {
     value:number,
     debitedAccountId :string,
     creditedAccountId:string
+    
 }
 
 export interface ITransactionInputDTO{
@@ -20,7 +21,7 @@ export class Transaction {
       private value:number,
       private  debitedAccountId :string,
       private  creditedAccountId:string,
-      private createAt?:Date
+      private createdAt?:Date
     ) {}
 
 public getId =()=>{
@@ -53,7 +54,7 @@ public setCreditedAccountId = (newCreditedAccountId: string) => {
 }
 
 public getCreateAt() {
-    return this.createAt
+    return this.createdAt
 }
 
 

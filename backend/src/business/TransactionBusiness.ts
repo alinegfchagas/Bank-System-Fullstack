@@ -9,7 +9,6 @@ import { ITransactionInputDTO, IViewTransactionInputDTO, Transaction } from "../
 
 export class TransactionBusiness {
   constructor(
-    private userDataBase: UserDatabase,
     private accountDataBase: AccountDatabase,
     private transactionDatabase: TransactionDatabase,
     private idGenerator: IdGenerator,
